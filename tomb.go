@@ -172,6 +172,32 @@ func (t *Tomb) run(f func() error) {
 	}
 }
 
+func (t *Tomb) GoInt32(f func(int32) error, i int32) {
+	t.init()
+	t.m.Lock()
+	defer t.m.Unlock()
+	select {
+	case <-t.dead:
+		panic("tomb.Go called after all goroutines terminated")
+	default:
+	}
+	t.alive++
+	go t.runInt32(f, i)
+}
+
+func (t *Tomb) runInt32(f func(int32) error, i int32) {
+	err := f(i)
+	t.m.Lock()
+	defer t.m.Unlock()
+	t.alive--
+	if t.alive == 0 || err != nil {
+		t.kill(err)
+		if t.alive == 0 {
+			close(t.dead)
+		}
+	}
+}
+
 // Kill puts the tomb in a dying state for the given reason,
 // closes the Dying channel, and sets Alive to false.
 //
