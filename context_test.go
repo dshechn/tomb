@@ -1,3 +1,4 @@
+//go:build go1.7
 // +build go1.7
 
 package tomb_test
@@ -7,7 +8,7 @@ import (
 	"testing"
 	"time"
 
-	"gopkg.in/tomb.v2"
+	"github.com/dshechn/tomb"
 )
 
 func TestWithContext(t *testing.T) {

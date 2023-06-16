@@ -2,9 +2,10 @@ package tomb_test
 
 import (
 	"errors"
-	"gopkg.in/tomb.v2"
 	"reflect"
 	"testing"
+
+	"github.com/dshechn/tomb"
 )
 
 func nothing() error { return nil }
